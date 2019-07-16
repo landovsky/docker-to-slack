@@ -10,10 +10,13 @@ class SlackDockerApp < Sinatra::Base
   end
   post "/*" do
     docker = JSON.parse(request.body.read)
-    slack = {text: "[<#{docker['repository']['repo_url']}|#{docker['repository']['repo_name']}:#{docker['push_data']['tag']}>] new image build complete."}
-    RestClient.post("https://hooks.slack.com/#{params[:splat].first}", payload: slack.to_json){ |response, request, result, &block|
-        RestClient.post(docker['callback_url'], {state: response.code==200?"success":"error"}.to_json, :content_type => :json)
+
+    slack = {text: "#{docker['data']['name']} | #{docker['data']['git_url']} >> #{docker['action']}"}
+
+    RestClient.post("https://hooks.slack.com/#{params[:splat].first}",
+                    payload: slack.to_json) { |response, _request, _result, &block|
     }
+    [200]
   end
 end
 

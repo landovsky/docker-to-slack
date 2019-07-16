@@ -23,3 +23,4 @@ class SlackDockerApp < Sinatra::Base
 end
 
 run SlackDockerApp
+

@@ -11,6 +11,8 @@ class SlackDockerApp < Sinatra::Base
   post "/*" do
     docker = JSON.parse(request.body.read)
 
+    puts docker
+
     slack = {text: "#{docker['data']['name']} | #{docker['data']['git_url']} >> #{docker['action']}"}
 
     RestClient.post("https://hooks.slack.com/#{params[:splat].first}",

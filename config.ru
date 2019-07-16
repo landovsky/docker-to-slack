@@ -13,14 +13,13 @@ class SlackDockerApp < Sinatra::Base
 
     puts docker
 
-    slack = {text: "#{docker['data']['name']} | #{docker['data']['git_url']} >> #{docker['action']}"}
+    slack = {text: "#{docker['data']['app']['name']} | #{docker['resource'].upcase} >> #{docker['data']['status']}"}
 
     RestClient.post("https://hooks.slack.com/#{params[:splat].first}",
-                    payload: slack.to_json) { |response, _request, _result, &block|
-    }
+                    slack.to_json,
+                    {content_type: :json, accept: :json})
     [200]
   end
 end
 
 run SlackDockerApp
-

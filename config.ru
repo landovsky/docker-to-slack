@@ -15,9 +15,11 @@ class SlackDockerApp < Sinatra::Base
 
     slack = {text: "#{docker['data']['app']['name']} | #{docker['resource'].upcase} >> #{docker['data']['status']}"}
 
-    RestClient.post("https://hooks.slack.com/#{params[:splat].first}",
-                    slack.to_json,
-                    {content_type: :json, accept: :json})
+    unless docker['data']['status'] == 'pending'
+      RestClient.post("https://hooks.slack.com/#{params[:splat].first}",
+                      slack.to_json,
+                      {content_type: :json, accept: :json})
+    end
     [200]
   end
 end
